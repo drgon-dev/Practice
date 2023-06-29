@@ -1,0 +1,5 @@
+C:\Users\Micromax\Desktop\Свои приколы\Быстрая визуализация\x64\Debug\Быстрая визуализация.vcxproj.AssemblyReference.cache
+C:\Users\Micromax\Desktop\Свои приколы\Быстрая визуализация\x64\Debug\Быстрая визуализация.vcxproj.SuggestedBindingRedirects.cache
+C:\Users\Micromax\Desktop\Свои приколы\Быстрая визуализация\x64\Debug\Быстраявизуализация.MainWin.resources
+C:\Users\Micromax\Desktop\Свои приколы\Быстрая визуализация\x64\Debug\Быстрая визуализация.vcxproj.GenerateResource.cache
+C:\Users\Micromax\Desktop\Свои приколы\Быстрая визуализация\x64\Debug\Быстрая визуализация.exe
