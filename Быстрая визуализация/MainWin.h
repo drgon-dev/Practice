@@ -30,6 +30,8 @@ namespace Быстраявизуализация {
 			}
 		}
 	public: System::Windows::Forms::Timer^ Timer;
+	private: System::Windows::Forms::Button^ ResetButton;
+	public:
 
 	public:
 	protected:
@@ -74,6 +76,7 @@ namespace Быстраявизуализация {
 			this->TestButton = (gcnew System::Windows::Forms::Button());
 			this->NameLabel = (gcnew System::Windows::Forms::Label());
 			this->Timer = (gcnew System::Windows::Forms::Timer(this->components));
+			this->ResetButton = (gcnew System::Windows::Forms::Button());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->MainChart))->BeginInit();
 			this->SuspendLayout();
 			// 
@@ -144,17 +147,22 @@ namespace Быстраявизуализация {
 			// 
 			// TestButton
 			// 
-			this->TestButton->Location = System::Drawing::Point(1139, 8);
+			this->TestButton->BackColor = System::Drawing::Color::SandyBrown;
+			this->TestButton->FlatAppearance->BorderSize = 0;
+			this->TestButton->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
+			this->TestButton->Font = (gcnew System::Drawing::Font(L"Comic Sans MS", 10.8F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->TestButton->Location = System::Drawing::Point(1140, -1);
 			this->TestButton->Name = L"TestButton";
-			this->TestButton->Size = System::Drawing::Size(75, 23);
+			this->TestButton->Size = System::Drawing::Size(80, 40);
 			this->TestButton->TabIndex = 3;
-			this->TestButton->Text = L"TEST";
-			this->TestButton->UseVisualStyleBackColor = true;
+			this->TestButton->Text = L"Sort";
+			this->TestButton->UseVisualStyleBackColor = false;
 			this->TestButton->Click += gcnew System::EventHandler(this, &MainWin::TestButton_Click);
 			// 
 			// NameLabel
 			// 
-			this->NameLabel->Font = (gcnew System::Drawing::Font(L"Comic Sans MS", 10.2F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->NameLabel->Font = (gcnew System::Drawing::Font(L"Comic Sans MS", 10.8F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->NameLabel->Location = System::Drawing::Point(10, 10);
 			this->NameLabel->Name = L"NameLabel";
@@ -168,12 +176,28 @@ namespace Быстраявизуализация {
 			this->Timer->Interval = 50;
 			this->Timer->Tick += gcnew System::EventHandler(this, &MainWin::Timer_Tick);
 			// 
+			// ResetButton
+			// 
+			this->ResetButton->BackColor = System::Drawing::Color::PaleGreen;
+			this->ResetButton->FlatAppearance->BorderSize = 0;
+			this->ResetButton->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
+			this->ResetButton->Font = (gcnew System::Drawing::Font(L"Comic Sans MS", 10.8F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->ResetButton->Location = System::Drawing::Point(1060, -1);
+			this->ResetButton->Name = L"ResetButton";
+			this->ResetButton->Size = System::Drawing::Size(80, 40);
+			this->ResetButton->TabIndex = 5;
+			this->ResetButton->Text = L"Reset\r\n";
+			this->ResetButton->UseVisualStyleBackColor = false;
+			this->ResetButton->Click += gcnew System::EventHandler(this, &MainWin::ResetButton_Click);
+			// 
 			// MainWin
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(8, 16);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->BackgroundImageLayout = System::Windows::Forms::ImageLayout::None;
 			this->ClientSize = System::Drawing::Size(1300, 600);
+			this->Controls->Add(this->ResetButton);
 			this->Controls->Add(this->NameLabel);
 			this->Controls->Add(this->TestButton);
 			this->Controls->Add(this->MinButton);
@@ -229,6 +253,16 @@ namespace Быстраявизуализация {
 	}
 	private: System::Void Timer_Tick(System::Object^ sender, System::EventArgs^ e) {
 
+	}
+	private: System::Void ResetButton_Click(System::Object^ sender, System::EventArgs^ e) {
+		int y;
+		srand((unsigned)time(NULL));
+		this->MainChart->Series[0]->Points->Clear();
+		for (int i = 0; i < 40; i++) {
+			y = rand() % 40;
+			arrY[i] = y;
+			this->MainChart->Series[0]->Points->AddXY(i, y);
+		}
 	}
 };
 }
