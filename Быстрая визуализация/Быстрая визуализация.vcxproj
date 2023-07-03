@@ -121,11 +121,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MainWin.cpp" />
+    <ClCompile Include="Pair.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="sort.h" />
     <ClInclude Include="MainWin.h">
       <FileType>CppForm</FileType>
     </ClInclude>
+    <ClInclude Include="Pair.h" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="MainWin.resx">

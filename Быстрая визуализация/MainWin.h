@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <time.h>
+#include <stack>
 
 namespace Быстраявизуализация {
 
@@ -19,6 +20,8 @@ namespace Быстраявизуализация {
 		MainWin(void)
 		{
 			InitializeComponent();
+			stac = new std::stack<int>;
+			//создание начального массива с графиком
 			int y;
 			srand((unsigned)time(NULL));
 			arrY = new int[40];
@@ -28,14 +31,18 @@ namespace Быстраявизуализация {
 				arrY[i]=y;
 				this->MainChart->Series[0]->Points->AddXY(i,y);
 			}
+			est();
 		}
-	public: System::Windows::Forms::Timer^ Timer;
-	private: System::Windows::Forms::Button^ ResetButton;
-	public:
 
-	public:
+	private: System::Windows::Forms::Button^ ResetButton;
 	protected:
 		int* arrY;
+	private: System::Windows::Forms::Button^ StepButton;
+	private: System::Windows::Forms::Timer^ MainTimer;
+	protected:
+
+	protected:
+		std::stack<int>* stac;
 		/// <summary>
 		/// Освободить все используемые ресурсы.
 		/// </summary>
@@ -45,6 +52,7 @@ namespace Быстраявизуализация {
 			{
 				delete components;
 			}
+			delete stac;
 		}
 	private: System::Windows::Forms::DataVisualization::Charting::Chart^ MainChart;
 	private: System::Windows::Forms::Button^ ExitButton;
@@ -75,8 +83,9 @@ namespace Быстраявизуализация {
 			this->MinButton = (gcnew System::Windows::Forms::Button());
 			this->TestButton = (gcnew System::Windows::Forms::Button());
 			this->NameLabel = (gcnew System::Windows::Forms::Label());
-			this->Timer = (gcnew System::Windows::Forms::Timer(this->components));
 			this->ResetButton = (gcnew System::Windows::Forms::Button());
+			this->StepButton = (gcnew System::Windows::Forms::Button());
+			this->MainTimer = (gcnew System::Windows::Forms::Timer(this->components));
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->MainChart))->BeginInit();
 			this->SuspendLayout();
 			// 
@@ -152,7 +161,7 @@ namespace Быстраявизуализация {
 			this->TestButton->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
 			this->TestButton->Font = (gcnew System::Drawing::Font(L"Comic Sans MS", 10.8F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
-			this->TestButton->Location = System::Drawing::Point(1140, -1);
+			this->TestButton->Location = System::Drawing::Point(1040, -1);
 			this->TestButton->Name = L"TestButton";
 			this->TestButton->Size = System::Drawing::Size(80, 40);
 			this->TestButton->TabIndex = 3;
@@ -170,12 +179,6 @@ namespace Быстраявизуализация {
 			this->NameLabel->TabIndex = 4;
 			this->NameLabel->Text = L"QuickSort";
 			// 
-			// Timer
-			// 
-			this->Timer->Enabled = true;
-			this->Timer->Interval = 50;
-			this->Timer->Tick += gcnew System::EventHandler(this, &MainWin::Timer_Tick);
-			// 
 			// ResetButton
 			// 
 			this->ResetButton->BackColor = System::Drawing::Color::PaleGreen;
@@ -183,7 +186,7 @@ namespace Быстраявизуализация {
 			this->ResetButton->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
 			this->ResetButton->Font = (gcnew System::Drawing::Font(L"Comic Sans MS", 10.8F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
-			this->ResetButton->Location = System::Drawing::Point(1060, -1);
+			this->ResetButton->Location = System::Drawing::Point(960, -1);
 			this->ResetButton->Name = L"ResetButton";
 			this->ResetButton->Size = System::Drawing::Size(80, 40);
 			this->ResetButton->TabIndex = 5;
@@ -191,12 +194,33 @@ namespace Быстраявизуализация {
 			this->ResetButton->UseVisualStyleBackColor = false;
 			this->ResetButton->Click += gcnew System::EventHandler(this, &MainWin::ResetButton_Click);
 			// 
+			// StepButton
+			// 
+			this->StepButton->BackColor = System::Drawing::Color::Plum;
+			this->StepButton->FlatAppearance->BorderSize = 0;
+			this->StepButton->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
+			this->StepButton->Font = (gcnew System::Drawing::Font(L"Comic Sans MS", 10.8F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->StepButton->Location = System::Drawing::Point(1120, -1);
+			this->StepButton->Name = L"StepButton";
+			this->StepButton->Size = System::Drawing::Size(80, 40);
+			this->StepButton->TabIndex = 6;
+			this->StepButton->Text = L"Step\r\n";
+			this->StepButton->UseVisualStyleBackColor = false;
+			this->StepButton->Click += gcnew System::EventHandler(this, &MainWin::StepButton_Click);
+			// 
+			// MainTimer
+			// 
+			this->MainTimer->Interval = 10;
+			this->MainTimer->Tick += gcnew System::EventHandler(this, &MainWin::MainTimer_Tick);
+			// 
 			// MainWin
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(8, 16);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->BackgroundImageLayout = System::Windows::Forms::ImageLayout::None;
 			this->ClientSize = System::Drawing::Size(1300, 600);
+			this->Controls->Add(this->StepButton);
 			this->Controls->Add(this->ResetButton);
 			this->Controls->Add(this->NameLabel);
 			this->Controls->Add(this->TestButton);
@@ -220,9 +244,54 @@ namespace Быстраявизуализация {
 	}
 
 	private: System::Void TestButton_Click(System::Object^ sender, System::EventArgs^ e) {
-		this->Timer->Start();
 		quicksort(0, 39);
+
 	}
+
+	void est() {
+		while (!stac->empty())
+			stac->pop();
+		int* temp = new int[40];
+		for (int i = 0; i < 40; i++) {
+			temp[i] = arrY[i];
+		}
+		quicksort(temp, 0, 39);
+	}
+
+	void quicksort(int arr[], int start, int end) {
+		int partition = part(arr, start, end);
+		stac->push(start);
+		stac->push(end);
+		if (start >= end)
+			return;
+		quicksort(arr, start, partition - 1);
+		stac->push(start);
+		stac->push(partition - 1);
+		quicksort(arr, partition + 1, end);
+		stac->push(partition + 1);
+		stac->push(end);
+	}
+
+	int part(int arr[], int start, int end) {
+		int pivot = arr[start], count = 0, pivotindex, i, j;
+		for (int i = start + 1; i <= end; i++)
+			if (arr[i] <= pivot)
+				count++;
+		pivotindex = start + count;
+		std::swap(arr[pivotindex], arr[start]);
+		i = start, j = end;
+		while (i<pivotindex && j>pivotindex) {
+			while (arr[i] <= pivot)
+				i++;
+			while (arr[j] > pivot)
+				j--;
+			if (i<pivotindex && j>pivotindex)
+				std::swap(arr[i++], arr[j--]);
+		}
+		return pivotindex;
+	}
+
+
 	void quicksort(int start, int end) {
 		int partition = part(start, end);
 		if (start >= end)
@@ -230,6 +299,11 @@ namespace Быстраявизуализация {
 		quicksort(start, partition - 1);
 		quicksort(partition + 1, end);
 	}
+
+	void onesort(int start, int end) {
+		part(start, end);
+	}
+
 	int part(int start, int end) {
 		int pivot = this->arrY[start], count = 0, pivotindex, i, j;
 		for (int i = start + 1; i <= end; i++)
@@ -251,9 +325,7 @@ namespace Быстраявизуализация {
 			this->MainChart->Series[0]->Points->AddXY(i, arrY[i]);
 		return pivotindex;
 	}
-	private: System::Void Timer_Tick(System::Object^ sender, System::EventArgs^ e) {
 
-	}
 	private: System::Void ResetButton_Click(System::Object^ sender, System::EventArgs^ e) {
 		int y;
 		srand((unsigned)time(NULL));
@@ -263,35 +335,27 @@ namespace Быстраявизуализация {
 			arrY[i] = y;
 			this->MainChart->Series[0]->Points->AddXY(i, y);
 		}
+		est();
 	}
+private: System::Void StepButton_Click(System::Object^ sender, System::EventArgs^ e) {
+	if (this->MainTimer->Enabled == false)
+		this->MainTimer->Enabled = true;
+	else
+		this->MainTimer->Enabled = false;
+}
+
+private: System::Void MainTimer_Tick(System::Object^ sender, System::EventArgs^ e) {
+	int a, b;
+	if (!stac->empty()) {
+		b = stac->top();
+		stac->pop();
+		a = stac->top();
+		stac->pop();
+		onesort(a, b);
+	}
+	else
+		est();
+}
 };
 }
 #pragma endregion
-//void quicksort(int start, int end) {
-//	int partition = part(start, end);
-//	if (start >= end)
-//		return;
-//	quicksort(start, partition - 1);
-//	quicksort(partition + 1, end);
-//}
-//int part(int start, int end) {
-//	int pivot = this->arrY[start], count = 0, pivotindex, i, j;
-//	for (int i = start + 1; i <= end; i++)
-//		if (this->arrY[i] <= pivot)
-//			count++;
-//	pivotindex = start + count;
-//	std::swap(this->arrY[pivotindex], this->arrY[start]);
-//	i = start, j = end;
-//	while (i<pivotindex && j>pivotindex) {
-//		while (this->arrY[i] <= pivot)
-//			i++;
-//		while (this->arrY[j] > pivot)
-//			j--;
-//		if (i<pivotindex && j>pivotindex)
-//			std::swap(this->arrY[i++], this->arrY[j--]);
-//	}
-//	this->MainChart->Series[0]->Points->Clear();
-//	for (int i = 0; i < 40; i++)
-//		this->MainChart->Series[0]->Points->AddXY(i, arrY[i]);
-//	return pivotindex;
-//}
