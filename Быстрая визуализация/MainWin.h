@@ -74,9 +74,9 @@ namespace Быстраявизуализация {
 		void InitializeComponent(void)
 		{
 			this->components = (gcnew System::ComponentModel::Container());
-			System::Windows::Forms::DataVisualization::Charting::ChartArea^ chartArea1 = (gcnew System::Windows::Forms::DataVisualization::Charting::ChartArea());
-			System::Windows::Forms::DataVisualization::Charting::Legend^ legend1 = (gcnew System::Windows::Forms::DataVisualization::Charting::Legend());
-			System::Windows::Forms::DataVisualization::Charting::Series^ series1 = (gcnew System::Windows::Forms::DataVisualization::Charting::Series());
+			System::Windows::Forms::DataVisualization::Charting::ChartArea^ chartArea3 = (gcnew System::Windows::Forms::DataVisualization::Charting::ChartArea());
+			System::Windows::Forms::DataVisualization::Charting::Legend^ legend3 = (gcnew System::Windows::Forms::DataVisualization::Charting::Legend());
+			System::Windows::Forms::DataVisualization::Charting::Series^ series3 = (gcnew System::Windows::Forms::DataVisualization::Charting::Series());
 			System::ComponentModel::ComponentResourceManager^ resources = (gcnew System::ComponentModel::ComponentResourceManager(MainWin::typeid));
 			this->MainChart = (gcnew System::Windows::Forms::DataVisualization::Charting::Chart());
 			this->ExitButton = (gcnew System::Windows::Forms::Button());
@@ -92,35 +92,35 @@ namespace Быстраявизуализация {
 			// MainChart
 			// 
 			this->MainChart->BorderSkin->BorderWidth = 0;
-			chartArea1->AlignmentStyle = System::Windows::Forms::DataVisualization::Charting::AreaAlignmentStyles::Cursor;
-			chartArea1->Area3DStyle->Inclination = 10;
-			chartArea1->Area3DStyle->Rotation = 10;
-			chartArea1->AxisX->Enabled = System::Windows::Forms::DataVisualization::Charting::AxisEnabled::False;
-			chartArea1->AxisX2->Enabled = System::Windows::Forms::DataVisualization::Charting::AxisEnabled::False;
-			chartArea1->AxisY2->Enabled = System::Windows::Forms::DataVisualization::Charting::AxisEnabled::False;
-			chartArea1->BorderColor = System::Drawing::Color::Transparent;
-			chartArea1->IsSameFontSizeForAllAxes = true;
-			chartArea1->Name = L"ChartArea1";
-			this->MainChart->ChartAreas->Add(chartArea1);
-			legend1->Enabled = false;
-			legend1->Name = L"Legend1";
-			this->MainChart->Legends->Add(legend1);
+			chartArea3->AlignmentStyle = System::Windows::Forms::DataVisualization::Charting::AreaAlignmentStyles::Cursor;
+			chartArea3->Area3DStyle->Inclination = 10;
+			chartArea3->Area3DStyle->Rotation = 10;
+			chartArea3->AxisX->Enabled = System::Windows::Forms::DataVisualization::Charting::AxisEnabled::False;
+			chartArea3->AxisX2->Enabled = System::Windows::Forms::DataVisualization::Charting::AxisEnabled::False;
+			chartArea3->AxisY2->Enabled = System::Windows::Forms::DataVisualization::Charting::AxisEnabled::False;
+			chartArea3->BorderColor = System::Drawing::Color::Transparent;
+			chartArea3->IsSameFontSizeForAllAxes = true;
+			chartArea3->Name = L"ChartArea1";
+			this->MainChart->ChartAreas->Add(chartArea3);
+			legend3->Enabled = false;
+			legend3->Name = L"Legend1";
+			this->MainChart->Legends->Add(legend3);
 			this->MainChart->Location = System::Drawing::Point(0, 40);
 			this->MainChart->Name = L"MainChart";
 			this->MainChart->Palette = System::Windows::Forms::DataVisualization::Charting::ChartColorPalette::EarthTones;
-			series1->ChartArea = L"ChartArea1";
-			series1->Color = System::Drawing::Color::SkyBlue;
-			series1->CustomProperties = L"PointWidth=0.9";
-			series1->EmptyPointStyle->BackImageWrapMode = System::Windows::Forms::DataVisualization::Charting::ChartImageWrapMode::Scaled;
-			series1->Font = (gcnew System::Drawing::Font(L"Courier New", 7.8F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			series3->ChartArea = L"ChartArea1";
+			series3->Color = System::Drawing::Color::SkyBlue;
+			series3->CustomProperties = L"PointWidth=0.9";
+			series3->EmptyPointStyle->BackImageWrapMode = System::Windows::Forms::DataVisualization::Charting::ChartImageWrapMode::Scaled;
+			series3->Font = (gcnew System::Drawing::Font(L"Courier New", 7.8F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(177)));
-			series1->IsVisibleInLegend = false;
-			series1->Legend = L"Legend1";
-			series1->MarkerBorderColor = System::Drawing::Color::Black;
-			series1->Name = L"hgtyv";
-			series1->YAxisType = System::Windows::Forms::DataVisualization::Charting::AxisType::Secondary;
-			series1->YValuesPerPoint = 3;
-			this->MainChart->Series->Add(series1);
+			series3->IsVisibleInLegend = false;
+			series3->Legend = L"Legend1";
+			series3->MarkerBorderColor = System::Drawing::Color::Black;
+			series3->Name = L"hgtyv";
+			series3->YAxisType = System::Windows::Forms::DataVisualization::Charting::AxisType::Secondary;
+			series3->YValuesPerPoint = 3;
+			this->MainChart->Series->Add(series3);
 			this->MainChart->Size = System::Drawing::Size(1300, 560);
 			this->MainChart->TabIndex = 0;
 			// 
@@ -211,7 +211,7 @@ namespace Быстраявизуализация {
 			// 
 			// MainTimer
 			// 
-			this->MainTimer->Interval = 10;
+			this->MainTimer->Interval = 30;
 			this->MainTimer->Tick += gcnew System::EventHandler(this, &MainWin::MainTimer_Tick);
 			// 
 			// MainWin
@@ -256,6 +256,7 @@ namespace Быстраявизуализация {
 			temp[i] = arrY[i];
 		}
 		quicksort(temp, 0, 39);
+		delete temp;
 	}
 
 	void quicksort(int arr[], int start, int end) {
@@ -265,11 +266,11 @@ namespace Быстраявизуализация {
 		if (start >= end)
 			return;
 		quicksort(arr, start, partition - 1);
-		stac->push(start);
-		stac->push(partition - 1);
+		//stac->push(start);
+		//stac->push(partition - 1);
 		quicksort(arr, partition + 1, end);
-		stac->push(partition + 1);
-		stac->push(end);
+		//stac->push(partition + 1);
+		//stac->push(end);
 	}
 
 	int part(int arr[], int start, int end) {
@@ -353,8 +354,8 @@ private: System::Void MainTimer_Tick(System::Object^ sender, System::EventArgs^ 
 		stac->pop();
 		onesort(a, b);
 	}
-	else
-		est();
+	//else
+	//	est();
 }
 };
 }
