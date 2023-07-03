@@ -1,8 +1,8 @@
 #pragma once
 #include <iostream>
 #include <time.h>
-#include <queue>
 #include <fstream>
+#include "Func.cpp"
 
 namespace Быстраявизуализация {
 
@@ -247,6 +247,10 @@ namespace Быстраявизуализация {
 	}
 
 	private: System::Void TestButton_Click(System::Object^ sender, System::EventArgs^ e) {
+		if (this->MainTimer->Enabled) {
+			this->MainTimer->Enabled = false;
+			empty(*stac);
+		}
 		quicksort(0, 39);
 		this->MainChart->Series[0]->Points->Clear();
 		for (int i = 0; i < 40; i++)
@@ -254,8 +258,7 @@ namespace Быстраявизуализация {
 	}
 
 	void est() {
-		while (!stac->empty())
-			stac->pop();
+		empty(*stac);
 		int* temp = new int[40];
 		for (int i = 0; i < 40; i++)
 			temp[i] = arrY[i];
@@ -329,6 +332,10 @@ namespace Быстраявизуализация {
 	}
 
 	private: System::Void ResetButton_Click(System::Object^ sender, System::EventArgs^ e) {
+		if (this->MainTimer->Enabled) {
+			this->MainTimer->Enabled = false;
+			empty(*stac);
+		}
 		int y;
 		srand((unsigned)time(NULL));
 		this->MainChart->Series[0]->Points->Clear();
