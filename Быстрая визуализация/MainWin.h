@@ -60,6 +60,7 @@ namespace Быстраявизуализация {
 				delete components;
 			}
 			delete stac;
+			delete arrY;
 		}
 	private: System::Windows::Forms::DataVisualization::Charting::Chart^ MainChart;
 	private: System::Windows::Forms::Button^ ExitButton;
@@ -81,9 +82,9 @@ namespace Быстраявизуализация {
 		void InitializeComponent(void)
 		{
 			this->components = (gcnew System::ComponentModel::Container());
-			System::Windows::Forms::DataVisualization::Charting::ChartArea^ chartArea2 = (gcnew System::Windows::Forms::DataVisualization::Charting::ChartArea());
-			System::Windows::Forms::DataVisualization::Charting::Legend^ legend2 = (gcnew System::Windows::Forms::DataVisualization::Charting::Legend());
-			System::Windows::Forms::DataVisualization::Charting::Series^ series2 = (gcnew System::Windows::Forms::DataVisualization::Charting::Series());
+			System::Windows::Forms::DataVisualization::Charting::ChartArea^ chartArea1 = (gcnew System::Windows::Forms::DataVisualization::Charting::ChartArea());
+			System::Windows::Forms::DataVisualization::Charting::Legend^ legend1 = (gcnew System::Windows::Forms::DataVisualization::Charting::Legend());
+			System::Windows::Forms::DataVisualization::Charting::Series^ series1 = (gcnew System::Windows::Forms::DataVisualization::Charting::Series());
 			System::ComponentModel::ComponentResourceManager^ resources = (gcnew System::ComponentModel::ComponentResourceManager(MainWin::typeid));
 			this->MainChart = (gcnew System::Windows::Forms::DataVisualization::Charting::Chart());
 			this->ExitButton = (gcnew System::Windows::Forms::Button());
@@ -99,35 +100,34 @@ namespace Быстраявизуализация {
 			// MainChart
 			// 
 			this->MainChart->BorderSkin->BorderWidth = 0;
-			chartArea2->AlignmentStyle = System::Windows::Forms::DataVisualization::Charting::AreaAlignmentStyles::Cursor;
-			chartArea2->Area3DStyle->Inclination = 10;
-			chartArea2->Area3DStyle->Rotation = 10;
-			chartArea2->AxisX->Enabled = System::Windows::Forms::DataVisualization::Charting::AxisEnabled::False;
-			chartArea2->AxisX2->Enabled = System::Windows::Forms::DataVisualization::Charting::AxisEnabled::False;
-			chartArea2->AxisY2->Enabled = System::Windows::Forms::DataVisualization::Charting::AxisEnabled::False;
-			chartArea2->BorderColor = System::Drawing::Color::Transparent;
-			chartArea2->IsSameFontSizeForAllAxes = true;
-			chartArea2->Name = L"ChartArea1";
-			this->MainChart->ChartAreas->Add(chartArea2);
-			legend2->Enabled = false;
-			legend2->Name = L"Legend1";
-			this->MainChart->Legends->Add(legend2);
+			chartArea1->AlignmentStyle = System::Windows::Forms::DataVisualization::Charting::AreaAlignmentStyles::Cursor;
+			chartArea1->Area3DStyle->Inclination = 10;
+			chartArea1->Area3DStyle->Rotation = 10;
+			chartArea1->AxisX2->Enabled = System::Windows::Forms::DataVisualization::Charting::AxisEnabled::False;
+			chartArea1->AxisY->Enabled = System::Windows::Forms::DataVisualization::Charting::AxisEnabled::False;
+			chartArea1->BorderColor = System::Drawing::Color::Transparent;
+			chartArea1->IsSameFontSizeForAllAxes = true;
+			chartArea1->Name = L"ChartArea1";
+			this->MainChart->ChartAreas->Add(chartArea1);
+			legend1->Enabled = false;
+			legend1->Name = L"Legend1";
+			this->MainChart->Legends->Add(legend1);
 			this->MainChart->Location = System::Drawing::Point(0, 40);
 			this->MainChart->Name = L"MainChart";
 			this->MainChart->Palette = System::Windows::Forms::DataVisualization::Charting::ChartColorPalette::EarthTones;
-			series2->ChartArea = L"ChartArea1";
-			series2->Color = System::Drawing::Color::SkyBlue;
-			series2->CustomProperties = L"PointWidth=0.9";
-			series2->EmptyPointStyle->BackImageWrapMode = System::Windows::Forms::DataVisualization::Charting::ChartImageWrapMode::Scaled;
-			series2->Font = (gcnew System::Drawing::Font(L"Courier New", 7.8F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			series1->ChartArea = L"ChartArea1";
+			series1->Color = System::Drawing::Color::SkyBlue;
+			series1->CustomProperties = L"PointWidth=0.9";
+			series1->EmptyPointStyle->BackImageWrapMode = System::Windows::Forms::DataVisualization::Charting::ChartImageWrapMode::Scaled;
+			series1->Font = (gcnew System::Drawing::Font(L"Courier New", 7.8F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(177)));
-			series2->IsVisibleInLegend = false;
-			series2->Legend = L"Legend1";
-			series2->MarkerBorderColor = System::Drawing::Color::Black;
-			series2->Name = L"hgtyv";
-			series2->YAxisType = System::Windows::Forms::DataVisualization::Charting::AxisType::Secondary;
-			series2->YValuesPerPoint = 3;
-			this->MainChart->Series->Add(series2);
+			series1->IsVisibleInLegend = false;
+			series1->Legend = L"Legend1";
+			series1->MarkerBorderColor = System::Drawing::Color::Black;
+			series1->Name = L"hgtyv";
+			series1->YAxisType = System::Windows::Forms::DataVisualization::Charting::AxisType::Secondary;
+			series1->YValuesPerPoint = 3;
+			this->MainChart->Series->Add(series1);
 			this->MainChart->Size = System::Drawing::Size(1300, 560);
 			this->MainChart->TabIndex = 0;
 			// 
@@ -218,7 +218,7 @@ namespace Быстраявизуализация {
 			// 
 			// MainTimer
 			// 
-			this->MainTimer->Interval = 1000;
+			this->MainTimer->Interval = 10;
 			this->MainTimer->Tick += gcnew System::EventHandler(this, &MainWin::MainTimer_Tick);
 			// 
 			// MainWin
@@ -259,25 +259,23 @@ namespace Быстраявизуализация {
 		while (!stac->empty())
 			stac->pop();
 		int* temp = new int[40];
-		for (int i = 0; i < 40; i++) {
+		for (int i = 0; i < 40; i++)
 			temp[i] = arrY[i];
-		}
 		quicksort(temp, 0, 39);
+		std::fstream tem("TEST.txt",std::ios::out);
+		for (int i = 0; i < 40;i++) {
+			tem << temp[i] << " ";
+		}
+		tem.close();
 		delete temp;
 	}
 
 	void quicksort(int arr[], int start, int end) {
 		int partition = part(arr, start, end);
-		stac->push(start);
-		stac->push(end);
 		if (start >= end)
 			return;
 		quicksort(arr, start, partition - 1);
-		/*stac->push(start);
-		stac->push(partition - 1);*/
 		quicksort(arr, partition + 1, end);
-		/*stac->push(partition + 1);
-		stac->push(end);*/
 	}
 
 	int part(int arr[], int start, int end) {
@@ -287,14 +285,19 @@ namespace Быстраявизуализация {
 				count++;
 		pivotindex = start + count;
 		std::swap(arr[pivotindex], arr[start]);
+		stac->push(pivotindex);
+		stac->push(start);
 		i = start, j = end;
 		while (i<pivotindex && j>pivotindex) {
 			while (arr[i] <= pivot)
 				i++;
 			while (arr[j] > pivot)
 				j--;
-			if (i<pivotindex && j>pivotindex)
+			if (i<pivotindex && j>pivotindex) {
 				std::swap(arr[i++], arr[j--]);
+				stac->push(i-1);
+				stac->push(j+1);
+			}
 		}
 		return pivotindex;
 	}
@@ -321,8 +324,9 @@ namespace Быстраявизуализация {
 				i++;
 			while (this->arrY[j] > pivot)
 				j--;
-			if (i<pivotindex && j>pivotindex)
+			if (i<pivotindex && j>pivotindex){
 				std::swap(this->arrY[i++], this->arrY[j--]);
+		}
 		}
 		this->MainChart->Series[0]->Points->Clear();
 		for (int i = 0; i < 40; i++)
@@ -355,7 +359,10 @@ private: System::Void MainTimer_Tick(System::Object^ sender, System::EventArgs^ 
 		stac->pop();
 		b = stac->front();
 		stac->pop();
-		part(a, b);
+		std::swap(arrY[a], arrY[b]);
+		this->MainChart->Series[0]->Points->Clear();
+		for (int i = 0; i < 40; i++)
+			this->MainChart->Series[0]->Points->AddXY(i, arrY[i]);
 	}
 }
 };
