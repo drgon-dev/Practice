@@ -33,12 +33,6 @@ namespace Быстраявизуализация {
 				this->MainChart->Series[0]->Points->AddXY(i,y);
 			}
 			est();
-			/*std::fstream temp("TEST.txt",std::ios::out);
-			while (!stac->empty()) {
-				temp << stac->front()<<" ";
-				stac->pop();
-			}
-			temp.close();*/
 		}
 
 	private: System::Windows::Forms::Button^ ResetButton;
@@ -103,8 +97,10 @@ namespace Быстраявизуализация {
 			chartArea1->AlignmentStyle = System::Windows::Forms::DataVisualization::Charting::AreaAlignmentStyles::Cursor;
 			chartArea1->Area3DStyle->Inclination = 10;
 			chartArea1->Area3DStyle->Rotation = 10;
+			chartArea1->AxisX->Enabled = System::Windows::Forms::DataVisualization::Charting::AxisEnabled::False;
 			chartArea1->AxisX2->Enabled = System::Windows::Forms::DataVisualization::Charting::AxisEnabled::False;
 			chartArea1->AxisY->Enabled = System::Windows::Forms::DataVisualization::Charting::AxisEnabled::False;
+			chartArea1->AxisY2->Enabled = System::Windows::Forms::DataVisualization::Charting::AxisEnabled::False;
 			chartArea1->BorderColor = System::Drawing::Color::Transparent;
 			chartArea1->IsSameFontSizeForAllAxes = true;
 			chartArea1->Name = L"ChartArea1";
@@ -218,7 +214,7 @@ namespace Быстраявизуализация {
 			// 
 			// MainTimer
 			// 
-			this->MainTimer->Interval = 10;
+			this->MainTimer->Interval = 300;
 			this->MainTimer->Tick += gcnew System::EventHandler(this, &MainWin::MainTimer_Tick);
 			// 
 			// MainWin
@@ -252,7 +248,9 @@ namespace Быстраявизуализация {
 
 	private: System::Void TestButton_Click(System::Object^ sender, System::EventArgs^ e) {
 		quicksort(0, 39);
-
+		this->MainChart->Series[0]->Points->Clear();
+		for (int i = 0; i < 40; i++)
+			this->MainChart->Series[0]->Points->AddXY(i, arrY[i]);
 	}
 
 	void est() {
@@ -262,11 +260,6 @@ namespace Быстраявизуализация {
 		for (int i = 0; i < 40; i++)
 			temp[i] = arrY[i];
 		quicksort(temp, 0, 39);
-		std::fstream tem("TEST.txt",std::ios::out);
-		for (int i = 0; i < 40;i++) {
-			tem << temp[i] << " ";
-		}
-		tem.close();
 		delete temp;
 	}
 
@@ -285,8 +278,10 @@ namespace Быстраявизуализация {
 				count++;
 		pivotindex = start + count;
 		std::swap(arr[pivotindex], arr[start]);
-		stac->push(pivotindex);
-		stac->push(start);
+		if (pivotindex != start) {
+			stac->push(pivotindex);
+			stac->push(start);
+		}
 		i = start, j = end;
 		while (i<pivotindex && j>pivotindex) {
 			while (arr[i] <= pivot)
@@ -295,8 +290,10 @@ namespace Быстраявизуализация {
 				j--;
 			if (i<pivotindex && j>pivotindex) {
 				std::swap(arr[i++], arr[j--]);
-				stac->push(i-1);
-				stac->push(j+1);
+				if ((i - 1) != (j + 1)) {
+					stac->push(i - 1);
+					stac->push(j + 1);
+				}
 			}
 		}
 		return pivotindex;
@@ -328,9 +325,6 @@ namespace Быстраявизуализация {
 				std::swap(this->arrY[i++], this->arrY[j--]);
 		}
 		}
-		this->MainChart->Series[0]->Points->Clear();
-		for (int i = 0; i < 40; i++)
-			this->MainChart->Series[0]->Points->AddXY(i, arrY[i]);
 		return pivotindex;
 	}
 
@@ -364,6 +358,8 @@ private: System::Void MainTimer_Tick(System::Object^ sender, System::EventArgs^ 
 		for (int i = 0; i < 40; i++)
 			this->MainChart->Series[0]->Points->AddXY(i, arrY[i]);
 	}
+	else
+		this->MainTimer->Enabled = false;
 }
 };
 }
