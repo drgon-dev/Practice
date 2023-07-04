@@ -12,9 +12,6 @@ namespace Быстраявизуализация {
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
-	/// <summary>
-	/// Сводка для MainWin
-	/// </summary>
 	public ref class MainWin : public System::Windows::Forms::Form
 	{
 	public:
@@ -32,47 +29,31 @@ namespace Быстраявизуализация {
 				arrY[i] = y;
 				this->MainChart->Series[0]->Points->AddXY(i,y);
 			}
+			//вызов функции заполнения очереди
 			est();
 		}
-
-	private: System::Windows::Forms::Button^ ResetButton;
+	private: 
+		System::Windows::Forms::Button^ ResetButton;
+		System::Windows::Forms::Button^ StepButton;
+		System::Windows::Forms::Timer^ MainTimer;
 	protected:
 		int* arrY;
-	private: System::Windows::Forms::Button^ StepButton;
-	private: System::Windows::Forms::Timer^ MainTimer;
-	protected:
-
-	protected:
 		std::queue<int>* stac;
-		/// <summary>
-		/// Освободить все используемые ресурсы.
-		/// </summary>
-		~MainWin()
-		{
-			if (components)
-			{
+		~MainWin(){
+			if (components){
 				delete components;
 			}
 			delete stac;
 			delete arrY;
 		}
-	private: System::Windows::Forms::DataVisualization::Charting::Chart^ MainChart;
-	private: System::Windows::Forms::Button^ ExitButton;
-	private: System::Windows::Forms::Button^ MinButton;
-	private: System::Windows::Forms::Button^ TestButton;
-	private: System::Windows::Forms::Label^ NameLabel;
-	private: System::ComponentModel::IContainer^ components;
-	private:
-		/// <summary>
-		/// Обязательная переменная конструктора.
-		/// </summary>
-
-
+	private: 
+		System::Windows::Forms::DataVisualization::Charting::Chart^ MainChart;
+		System::Windows::Forms::Button^ ExitButton;
+		System::Windows::Forms::Button^ MinButton;
+		System::Windows::Forms::Button^ TestButton;
+		System::Windows::Forms::Label^ NameLabel;
+		System::ComponentModel::IContainer^ components;
 #pragma region Windows Form Designer generated code
-		/// <summary>
-		/// Требуемый метод для поддержки конструктора — не изменяйте 
-		/// содержимое этого метода с помощью редактора кода.
-		/// </summary>
 		void InitializeComponent(void)
 		{
 			this->components = (gcnew System::ComponentModel::Container());
@@ -239,99 +220,98 @@ namespace Быстраявизуализация {
 			this->ResumeLayout(false);
 
 		}
-	private: System::Void ExitButton_Click(System::Object^ sender, System::EventArgs^ e) {
-		Application::Exit();
-	}
-	private: System::Void MinButton_Click(System::Object^ sender, System::EventArgs^ e) {
-		this->WindowState = System::Windows::Forms::FormWindowState::Minimized;
-	}
-
-	private: System::Void TestButton_Click(System::Object^ sender, System::EventArgs^ e) {
-		if (this->MainTimer->Enabled) {
-			this->MainTimer->Enabled = false;
+	private:
+		System::Void ExitButton_Click(System::Object^ sender, System::EventArgs^ e) {
+			Application::Exit();
+		}
+		System::Void MinButton_Click(System::Object^ sender, System::EventArgs^ e) {
+			this->WindowState = System::Windows::Forms::FormWindowState::Minimized;
+		}
+		//запуск сортировки без пошаговой визуализации
+		System::Void TestButton_Click(System::Object^ sender, System::EventArgs^ e) {
+			if (this->MainTimer->Enabled) {
+				this->MainTimer->Enabled = false;
+				empty(*stac);
+			}
+			quicksort(0, 39);
+			this->MainChart->Series[0]->Points->Clear();
+			for (int i = 0; i < 40; i++)
+				this->MainChart->Series[0]->Points->AddXY(i, arrY[i]);
+		}
+		//заполение очереди
+		void est() {
 			empty(*stac);
+			int* temp = new int[40];
+			for (int i = 0; i < 40; i++)
+				temp[i] = arrY[i];
+			quicksort(temp, 0, 39);
+			delete temp;
 		}
-		quicksort(0, 39);
-		this->MainChart->Series[0]->Points->Clear();
-		for (int i = 0; i < 40; i++)
-			this->MainChart->Series[0]->Points->AddXY(i, arrY[i]);
-	}
-
-	void est() {
-		empty(*stac);
-		int* temp = new int[40];
-		for (int i = 0; i < 40; i++)
-			temp[i] = arrY[i];
-		quicksort(temp, 0, 39);
-		delete temp;
-	}
-
-	void quicksort(int arr[], int start, int end) {
-		int partition = part(arr, start, end);
-		if (start >= end)
-			return;
-		quicksort(arr, start, partition - 1);
-		quicksort(arr, partition + 1, end);
-	}
-
-	int part(int arr[], int start, int end) {
-		int pivot = arr[start], count = 0, pivotindex, i, j;
-		for (int i = start + 1; i <= end; i++)
-			if (arr[i] <= pivot)
-				count++;
-		pivotindex = start + count;
-		std::swap(arr[pivotindex], arr[start]);
-		if (pivotindex != start) {
-			stac->push(pivotindex);
-			stac->push(start);
+		//сортировка с заполнением очереди
+		void quicksort(int arr[], int start, int end) {
+			int partition = part(arr, start, end);
+			if (start >= end)
+				return;
+			quicksort(arr, start, partition - 1);
+			quicksort(arr, partition + 1, end);
 		}
-		i = start, j = end;
-		while (i<pivotindex && j>pivotindex) {
-			while (arr[i] <= pivot)
-				i++;
-			while (arr[j] > pivot)
-				j--;
-			if (i<pivotindex && j>pivotindex) {
-				std::swap(arr[i++], arr[j--]);
-				if ((i - 1) != (j + 1)) {
-					stac->push(i - 1);
-					stac->push(j + 1);
+		int part(int arr[], int start, int end) {
+			int pivot = arr[start], count = 0, pivotindex, i, j;
+			for (int i = start + 1; i <= end; i++)
+				if (arr[i] <= pivot)
+					count++;
+			pivotindex = start + count;
+			std::swap(arr[pivotindex], arr[start]);
+			if (pivotindex != start) {
+				stac->push(pivotindex);
+				stac->push(start);
+			}
+			i = start, j = end;
+			while (i<pivotindex && j>pivotindex) {
+				while (arr[i] <= pivot)
+					i++;
+				while (arr[j] > pivot)
+					j--;
+				if (i<pivotindex && j>pivotindex) {
+					std::swap(arr[i++], arr[j--]);
+					if ((i - 1) != (j + 1)) {
+						stac->push(i - 1);
+						stac->push(j + 1);
+					}
 				}
 			}
-		}
 		return pivotindex;
-	}
-
-
-	void quicksort(int start, int end) {
-		int partition = part(start, end);
-		if (start >= end)
-			return;
-		quicksort(start, partition - 1);
-		quicksort(partition + 1, end);
-	}
-
-	int part(int start, int end) {
-		int pivot = this->arrY[start], count = 0, pivotindex, i, j;
-		for (int i = start + 1; i <= end; i++)
-			if (this->arrY[i] <= pivot)
-				count++;
-		pivotindex = start + count;
-		std::swap(this->arrY[pivotindex], this->arrY[start]);
-		i = start, j = end;
-		while (i<pivotindex && j>pivotindex) {
-			while (this->arrY[i] <= pivot)
-				i++;
-			while (this->arrY[j] > pivot)
-				j--;
-			if (i<pivotindex && j>pivotindex){
-				std::swap(this->arrY[i++], this->arrY[j--]);
 		}
+		//сортировка финального массива
+		void quicksort(int start, int end) {
+			int partition = part(start, end);
+			if (start >= end)
+				return;
+			quicksort(start, partition - 1);
+			quicksort(partition + 1, end);
 		}
-		return pivotindex;
-	}
-
-	private: System::Void ResetButton_Click(System::Object^ sender, System::EventArgs^ e) {
+		int part(int start, int end) {
+			int pivot = this->arrY[start], count = 0, pivotindex, i, j;
+			for (int i = start + 1; i <= end; i++)
+				if (this->arrY[i] <= pivot)
+					count++;
+			pivotindex = start + count;
+			std::swap(this->arrY[pivotindex], this->arrY[start]);
+			i = start, j = end;
+			while (i<pivotindex && j>pivotindex) {
+				while (this->arrY[i] <= pivot)
+					i++;
+				while (this->arrY[j] > pivot)
+					j--;
+				if (i<pivotindex && j>pivotindex){
+					std::swap(this->arrY[i++], this->arrY[j--]);
+				}
+			}
+			return pivotindex;
+		}
+	private:
+		//очистка массива от данных и его заполнение псевдослучайными числами
+		System::Void ResetButton_Click(System::Object^ sender, System::EventArgs^ e) {
 		if (this->MainTimer->Enabled) {
 			this->MainTimer->Enabled = false;
 			empty(*stac);
@@ -346,13 +326,14 @@ namespace Быстраявизуализация {
 		}
 		est();
 	}
+	//функция пошаговой визуализации сортировки 
 private: System::Void StepButton_Click(System::Object^ sender, System::EventArgs^ e) {
 	if (this->MainTimer->Enabled == false)
 		this->MainTimer->Enabled = true;
 	else
 		this->MainTimer->Enabled = false;
 }
-
+	//пошаговое изменение массива
 private: System::Void MainTimer_Tick(System::Object^ sender, System::EventArgs^ e) {
 	int a, b;
 	if (!stac->empty()) {
