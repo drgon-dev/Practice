@@ -231,8 +231,8 @@ namespace Быстраявизуализация {
 		System::Void TestButton_Click(System::Object^ sender, System::EventArgs^ e) {
 			if (this->MainTimer->Enabled) {
 				this->MainTimer->Enabled = false;
-				empty(*stac);
 			}
+			empty(*stac);
 			quicksort(0, 39);
 			this->MainChart->Series[0]->Points->Clear();
 			for (int i = 0; i < 40; i++)
@@ -335,6 +335,7 @@ private: System::Void StepButton_Click(System::Object^ sender, System::EventArgs
 }
 	//пошаговое изменение массива
 private: System::Void MainTimer_Tick(System::Object^ sender, System::EventArgs^ e) {
+	Color RED = Color::FromName("Crimson");
 	int a, b;
 	if (!stac->empty()) {
 		a = stac->front();
@@ -345,6 +346,8 @@ private: System::Void MainTimer_Tick(System::Object^ sender, System::EventArgs^ 
 		this->MainChart->Series[0]->Points->Clear();
 		for (int i = 0; i < 40; i++)
 			this->MainChart->Series[0]->Points->AddXY(i, arrY[i]);
+		this->MainChart->Series[0]->Points[a]->Color = RED;
+		this->MainChart->Series[0]->Points[b]->Color = RED;
 	}
 	else
 		this->MainTimer->Enabled = false;
