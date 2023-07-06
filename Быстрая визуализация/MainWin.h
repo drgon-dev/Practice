@@ -1,7 +1,5 @@
 #pragma once
-#include <iostream>
 #include <time.h>
-#include <fstream>
 #include "Func.cpp"
 
 namespace Быстраявизуализация {
